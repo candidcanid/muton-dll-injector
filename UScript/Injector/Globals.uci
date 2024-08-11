@@ -1,0 +1,9 @@
+
+`include (Settings.uci)
+
+`define UTIL class'DataStructures'.static
+
+`define OFF class'Symbols'.default.Offset
+`define LDR class'Symbols'.default.LoadAddr
+`define PLT class'Symbols'.default.PltLoadAddr
+`define FUNCLET class'Symbols'.default.Funclet

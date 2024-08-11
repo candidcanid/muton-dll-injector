@@ -1,0 +1,4 @@
+// x86 = 32bit, x86_64 = 64bit
+`define Arch_x86
+// see RawPayloads.uc for valid flavours
+`define Flavour_XCom_EW
