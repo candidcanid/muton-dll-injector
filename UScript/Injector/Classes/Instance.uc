@@ -176,18 +176,21 @@ private function bool SetupShim(const out NativeExecShim CurShim, out ModifiedUF
 
 function bool InjectDllWithStem(const out string DllName) {
     // TODO: assert initialized
+    local int LibHandle;
     local string PathBuf;
     local UnpackedArray UnpackedPathBuf;
     local Address FuncPtrLoadLibraryW;
 
     PathBuf = GetXComEWBinaryDir() $ DllName $ Chr(0x0) $ Chr(0x0);
-    `log("[i] InjectDllWithStem:" $ PathBuf);
+    `log("[i] InjectDllWithStem:'" $ PathBuf $"'");
     UnpackedPathBuf = Prim.LeakFString(PathBuf);
 
     FuncPtrLoadLibraryW = Prim.ReadAddress(`UTIL.Address_AddAddr(`PLT.LoadLibraryW, SharedLibSlide), 0x0);
     `log("[i] FuncPtrLoadLibraryW: " $ `UTIL.FormatAddr(FuncPtrLoadLibraryW));
-
-    return Self.CallFuncPtrOneArgs(FuncPtrLoadLibraryW, UnpackedPathBuf.Data) == 0;
+    LibHandle = Self.CallFuncPtrOneArgs(FuncPtrLoadLibraryW, UnpackedPathBuf.Data);
+    `log("[i] FuncPtrLoadLibraryW:LibHandle= " $ `UTIL.ToHex(LibHandle));
+    // "If the function succeeds, the return value is a handle to the module."
+    return LibHandle != 0;
 }
 
 private function string GetXComEWBinaryDir() {
